@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Add Student</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="card">
+    <h2>Add New Student</h2>
+    <input type="text" id="student_id" placeholder="Student ID" />
+    <input type="text" id="name" placeholder="Full Name" />
+    <input type="email" id="email" placeholder="Email" />
+    <input type="text" id="course" placeholder="Course" />
+    <input type="text" id="semester" placeholder="Semester" />
+    <button id="addStudentBtn">Add Student</button>
+    <div class="message" id="msg"></div>
+    <small>View all students? <a href="index.html">View Students</a></small>
+  </div>
+
+  <script>
+    document.getElementById("addStudentBtn").addEventListener("click", async () => {
+      const student_id = document.getElementById("student_id").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const course = document.getElementById("course").value.trim();
+      const semester = document.getElementById("semester").value.trim();
+      const msg = document.getElementById("msg");
+      
+      msg.textContent = "Adding student...";
+      
+      const res = await fetch("/add-student", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ student_id, name, email, course, semester })
+      });
+      
+      const data = await res.json();
+      msg.textContent = data.message;
+      
+      if (data.success) {
+        setTimeout(() => {
+          document.getElementById("student_id").value = "";
+          document.getElementById("name").value = "";
+          document.getElementById("email").value = "";
+          document.getElementById("course").value = "";
+          document.getElementById("semester").value = "";
+        }, 1000);
+      }
+    });
+  </script>
+</body>
+</html>
